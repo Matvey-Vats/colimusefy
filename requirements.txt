@@ -3,3 +3,6 @@ djangorestframework
 psycopg2
 celery[redis]
 flower
+spotipy
+django-debug-toolbar
+django-cachalot==2.6.2

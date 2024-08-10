@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colimusefy</title>
+    <link rel="stylesheet" href="{% static "tracks/css/base.css" %}">
+    {% block css %}{% endblock css %}
+</head>
+<body>
+    <header id="header">
+        <div class="container">
+            <div class="header">
+                <div class="logo">
+                    <a href="/"><h1>Colimusefy</h1></a>
+                </div>
+                <nav class="navbar">
+                    <li><a href="tracks.html">Tracks</a></li>
+                    <li><a href="playlists.html">Playlists</a></li>
+                    <li><a href="artists.html">Artists</a></li>
+                </nav>
+
+                <a class="header__btn">Login</a>
+            </div>
+            <div class="line"></div>
+        </div>
+    </header>
+    <main>
+        {% block content %}
+        
+        {% endblock content %}
+        
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>About us</h3>
+                    <p>We provide the best music experience. Find out more about our platform and our services.</p>
+                </div>
+                <div class="footer-section links">
+                    <ul>
+                        <li><a href="#">Главная</a></li>
+                        <li><a href="#">Треки</a></li>
+                        <li><a href="#">Альбомы</a></li>
+                        <li><a href="#">Исполнители</a></li>
+                        <li><a href="#">Поиск</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Ваша Компания. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

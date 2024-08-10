@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static "tracks/css/index.css" %}">
+{% endblock css %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="artists">
+            {% for artist in artists %}
+            <a href="#">
+                <div class="artist">
+                    <img src="{{ artist.image }}" alt="">
+                    <h3>{{ artist.name }}</h3>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        <div class="playlists">
+            {% for album in albums %}
+            <a href="#">
+                <div class="playlist">
+                    <img src="{{ album.image }}" alt="">
+                    <h3>{{ album.name }}</h3>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
