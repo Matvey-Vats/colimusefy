@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static "tracks/css/artist_detail.css" %}">
+{% endblock css %}
+
+
+{% block content %}
+<section class="artist-page">
+    <div class="artist-page__container">
+        <div class="artist-cover">
+            <img src="{{ artist.images.0.url }}" alt="Album Cover">
+        </div>
+        <div class="album-list">
+            
+            
+                {% for album in albums %}
+                <div class="album-item">
+                    <img src="{{ album.image }}" alt="Track 1" class="track-image">
+                    <p><a href="{% url "album-detail" album.id %}">{{ album.name }}</a></p>
+                </div>
+                {% endfor %}
+            
+        
+        </div>
+    </div>
+</section>
+{% include "tracks/include/pagination.html" with paginator=paginator current_page=current_page %}
+{% endblock content %}

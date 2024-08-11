@@ -24,7 +24,7 @@
             <div class="playlist-card">
                 <img src="{{ album.album_image }}" alt="Playlist Cover">
                 <div class="playlist-info">
-                    <h3>{{ album.name }}</h3>
+                    <a href="{% url "album-detail" album.id %}"><h3>{{ album.name }}</h3></a>
                     <p>{{ album.total_tracks }} Tracks</p>
                     <p>{{ album.duration}}</p>
                     <p>{{ album.artists|join:", " }}</p>

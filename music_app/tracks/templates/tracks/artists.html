@@ -14,8 +14,8 @@
             {% for artist in artists %}
             <div class="artist-card">
                 <img src="{{ artist.image }}" alt="Artist 1" class="artist-image">
-                <h3 class="artist-name">{{ artist.name }}$</h3>
-                <a href="#" class="view-artist-button">View Artist</a>
+                <h3 class="artist-name">{{ artist.name }}</h3>
+                <a href="{% url "artist-detail" artist_id=artist.id %}" class="view-artist-button">View Artist</a>
             </div>
             {% endfor %}
         </div>

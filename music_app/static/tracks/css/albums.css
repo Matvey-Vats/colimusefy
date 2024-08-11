@@ -26,6 +26,15 @@
     color: #fff;
 }
 
+.playlist-info>a {
+    color: #fff;
+
+    transition: all .4s;
+}
+
+.playlist-info>a:hover {
+    text-decoration: underline;
+}
 
 
 .search-form {

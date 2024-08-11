@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static "tracks/css/album_detail.css" %}">
+{% endblock css %}
+
+
+{% block content %}
+<section class="album-page">
+    <div class="album-page__container">
+        <div class="album-cover">
+            <img src="{{ album.images.0.url }}" alt="Album Cover">
+        </div>
+        <div class="track-list">
+            
+            
+                {% for track in tracks %}
+                <div class="track-item">
+                    <img src="{{ album.images.0.url }}" alt="Track 1" class="track-image">
+                    <div class="track-info">
+                        <a href="{{ track.external_urls.spotify }}" target="_blank"><p class="track-title">{{ track.name }}</p></a>
+                        <audio controls>
+                            <source src="{{ track.preview_url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </div>
+                {% endfor %}
+            
+        
+        </div>
+    </div>
+</section>
+{% include "tracks/include/pagination.html" with paginator=paginator current_page=current_page %}
+{% endblock content %}

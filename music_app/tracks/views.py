@@ -2,6 +2,8 @@ from django.shortcuts import render
 from .spotify_client import get_spotify_client
 from django.conf import settings
 from django.core.paginator import Paginator
+from django.views.decorators.cache import cache_page
+
 
 from .tasks import fetch_album_data
 from celery.result import AsyncResult
@@ -16,6 +18,7 @@ def get_artist_info(sp, artist_id):
         'image': artist['images'][0]['url'] if artist.get('images') else ''
     }
 
+# @cache_page(60 * 15)
 def home(request):
     sp = get_spotify_client()
     
@@ -36,6 +39,7 @@ def home(request):
     
     # Извлекаем данные об альбомах
     popular_albums = [{
+        'id': album['id'],
         'name': album['name'],
         'image': album['images'][0]['url'] if album.get('images') else '',
         'artist': album['artists'][0]['name']
@@ -43,7 +47,7 @@ def home(request):
     
     return render(request, 'tracks/index.html', {'artists': sorted_artists, 'albums': popular_albums})    
 
-
+# @cache_page(60 * 15)
 def track_list(request):
     sp = get_spotify_client()
     
@@ -100,6 +104,7 @@ def track_list(request):
         
     # return render(request, "tracks/albums.html", {"albums": albums_data})
 
+# @cache_page(60 * 15)
 def album_list(request):
     sp = get_spotify_client()
     start_time = time.time()
@@ -116,6 +121,7 @@ def album_list(request):
         total_duration_min = total_duration_ms // 60000
         total_duration_sec = (total_duration_ms % 60000) // 1000
         albums_data.append({
+            'id': album['id'],
             'name': album['name'],
             'total_tracks': album['total_tracks'],
             'artists': [artist['name'] for artist in album['artists']],
@@ -147,7 +153,7 @@ def album_list(request):
 #     return render(request, "tracks/albums.html", {"albums": all_albums_data})
 
 
-
+# @cache_page(60 * 15)
 def artist_list(request):
     sp = get_spotify_client()
     
@@ -157,6 +163,7 @@ def artist_list(request):
     atrists_data = []
     for artist in artists:
         artists_info = {
+            'id': artist['id'],
             'name': artist['name'],
             'image': artist['images'][0]['url'],
         } 
@@ -169,3 +176,48 @@ def artist_list(request):
     return render(request, "tracks/artists.html", {'artists': page_obj,
                                                    'paginator': paginator,
                                                    'current_page': page_obj.number,})
+    
+  
+def album_detail(request, album_id):
+    sp = get_spotify_client()
+    
+    result = sp.album(album_id=album_id)
+    
+    tracks = result['tracks']['items']
+    
+    paginator = Paginator(tracks, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'tracks/album_detail.html', {"album": result,
+                                                        'tracks': page_obj,
+                                                        'paginator': paginator,
+                                                        'current_page': page_obj.number,})
+    
+
+def artist_detail(request, artist_id):
+    sp = get_spotify_client()
+    
+    result = sp.artist(artist_id)
+    
+    albums = sp.artist_albums(artist_id=artist_id, album_type='album', limit=50)
+    
+    
+    albums_data = []
+
+    for album in albums['items']:  # 'items' - это список альбомов
+        album_info = {
+            'id': album['id'],
+            'image': album['images'][0]['url'] if album['images'] else None,  # Проверка на наличие изображений
+            'name': album['name'],
+        }
+        albums_data.append(album_info)
+    
+    paginator = Paginator(albums_data, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'tracks/artist_detail.html', {'artist': result,
+                                                         'albums': page_obj,
+                                                         'paginator': paginator,
+                                                         'current_page': page_obj.number,})
