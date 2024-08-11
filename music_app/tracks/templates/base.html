@@ -17,9 +17,10 @@
                     <a href="/"><h1>Colimusefy</h1></a>
                 </div>
                 <nav class="navbar">
-                    <li><a href="tracks.html">Tracks</a></li>
-                    <li><a href="playlists.html">Playlists</a></li>
-                    <li><a href="artists.html">Artists</a></li>
+                    <li><a href="{% url "track-list" %}">Tracks</a></li>
+                    <li><a href="{% url "album-list" %}">Albums</a></li>
+                    <li><a href="{% url "artist-list" %}">Artists</a></li>
+                    <li><a href="#">Search</a></li>
                 </nav>
 
                 <a class="header__btn">Login</a>

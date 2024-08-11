@@ -127,6 +127,37 @@
 
 
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.pagination a {
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  margin: 0 4px;
+  border-radius: 5px;
+  background-color: #181818;
+  border: 1px solid #555;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination a:hover {
+  background-color: transparent;
+  color: #181818;
+}
+
+.pagination .active {
+  background-color: transparent;
+  color: #181818;
+  cursor:no-drop;
+}
+
+
+
 
 
 .footer {

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static "tracks/css/tracks.css" %}">
+{% endblock css %}
+
+
+{% block content %}
+<section class="tracks-page">
+    <div class="container">
+        <h1>Tracks</h1>
+        <div class="track-list">
+            {% for track in tracks %}
+            <div class="track-card">
+                <img src="{{ track.album_image }}" alt="Album Art">
+                <div class="track-info">
+                    <h3>{{ track.name }}</h3>
+                    <p><a href="#">{{ track.artists|join:", " }}</a></p>
+                    {% if track.preview_url %}
+                        <audio controls>
+                            <source src="{{ track.preview_url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    {% else %}
+                        <p>No preview available</p>
+                    {% endif %}
+                </div>
+                <div class="track-actions">
+                    <a href="{{ track.track_url }}" target="_blank">Listen on Spotify</a>
+                    <a href="#">Add to Playlist</a>
+                </div>
+            </div>
+            {% endfor %} 
+        </div>
+    </div>
+</section>
+{% comment %} {% include "tracks/include/pagination.html"%} {% endcomment %}
+{% include "tracks/include/pagination.html" with paginator=paginator current_page=current_page %}
+{% endblock content %}

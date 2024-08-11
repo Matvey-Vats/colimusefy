@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static "tracks/css/albums.css" %}">
+{% endblock css %}
+
+{% block content %}
+<div class="container">
+    <div class="search-form">
+        <form action="#" method="GET">
+            <input type="text" name="search" placeholder="Search for tracks or playlists..." class="search-input">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="playlists-page">
+    <div class="container">
+        <h1>Playlists</h1>
+        <div class="playlist-list">
+            {% for album in albums %}
+            <div class="playlist-card">
+                <img src="{{ album.album_image }}" alt="Playlist Cover">
+                <div class="playlist-info">
+                    <h3>{{ album.name }}</h3>
+                    <p>{{ album.total_tracks }} Tracks</p>
+                    <p>{{ album.duration}}</p>
+                    <p>{{ album.artists|join:", " }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% comment %} {% include "tracks/include/pagination.html" %} {% endcomment %}
+{% include "tracks/include/pagination.html" with paginator=paginator current_page=current_page %}
+{% endblock content %}

@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   music-app:
     build: 
@@ -6,19 +8,19 @@ services:
       - "8000:8000"
     volumes:
       - ./music_app:/music_app
-
     environment:
       - DB_HOST=database
       - DB_NAME=dbname
       - DB_USER=dbuser
       - DB_PASS=admin
-
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
-    
     depends_on:
       - database
-  
+      - redis
+
   database:
     image: postgres:14.6-alpine
     environment:
@@ -26,29 +28,27 @@ services:
       - POSTGRES_USER=dbuser
       - POSTGRES_PASSWORD=admin
 
-  # redis:
-  #   image: redis:7.0.5-alpine
-  #   hostname: redis
+  redis:
+    image: redis:7.0.5-alpine
+    hostname: redis
 
-  # worker:
-  #   build: 
-  #     context: .
-  #   hostname: worker
-  #   entrypoint: celery
-  #   command: -A celery_app.app worker --loglevel=info
-  #   volumes:
-  #     - ./service:/service
-  #   links:
-  #     - redis
-  #   depends_on:
-  #     - redis
-  #     - database
-      
-  #   environment:
-  #     - DB_HOST=database
-  #     - DB_NAME=dbname
-  #     - DB_USER=dbuser
-  #     - DB_PASS=admin
+  worker:
+    build: 
+      context: .
+    hostname: worker
+    entrypoint: sh -c "celery -A music_app.celery worker --loglevel=info"
+    volumes:
+      - ./music_app:/music_app
+    depends_on:
+      - redis
+      - database
+    environment:
+      - DB_HOST=database
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASS=admin
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
 
 
   # worker2:
@@ -73,19 +73,19 @@ services:
     
 
 
-  # flower:
-  #   build: 
-  #     context: .
-  #   hostname: flower
-  #   entrypoint: celery
-  #   command: -A celery_app.app flower
-  #   volumes:
-  #     - ./service:/service
-  #   links:
-  #     - redis
-  #   depends_on:
-  #     - redis
-  #   ports:
-  #     - "5555:5555"
+  flower:
+    build: 
+      context: .
+    hostname: flower
+    entrypoint: celery
+    command: -A celery_app.app flower
+    volumes:
+      - ./mucis_app:/mucis_app
+    links:
+      - redis
+    depends_on:
+      - redis
+    ports:
+      - "5555:5555"
 
       

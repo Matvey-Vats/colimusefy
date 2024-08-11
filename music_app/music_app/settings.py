@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import datetime
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,6 +28,9 @@ SECRET_KEY = 'django-insecure-=gd2)4c5@gqx7j8z*a(!dceag-6_gy&noma@981xls+fm*&p6w
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+
+
+CURRENT_YEAR = datetime.datetime.now().year
 
 
 # Application definition
@@ -169,3 +174,10 @@ CACHES = {
         },
     }
 }
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
