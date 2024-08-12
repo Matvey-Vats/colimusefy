@@ -1,0 +1,33 @@
+h1 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+p {
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    padding: 0.75rem;
+    background-color: #181818;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.footer{
+    margin-top: 80px;
+}

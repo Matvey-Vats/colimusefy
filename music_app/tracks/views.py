@@ -14,6 +14,7 @@ import time
 def get_artist_info(sp, artist_id):
     artist = sp.artist(artist_id)
     return {
+        'id': artist['id'],
         'name': artist['name'],
         'image': artist['images'][0]['url'] if artist.get('images') else ''
     }

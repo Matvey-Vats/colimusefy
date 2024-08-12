@@ -10,7 +10,7 @@
     <div class="container">
         <div class="artists">
             {% for artist in artists %}
-            <a href="#">
+            <a href="{% url "artist-detail" artist_id=artist.id %}">
                 <div class="artist">
                     <img src="{{ artist.image }}" alt="">
                     <h3>{{ artist.name }}</h3>

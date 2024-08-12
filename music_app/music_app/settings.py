@@ -27,6 +27,8 @@ SECRET_KEY = 'django-insecure-=gd2)4c5@gqx7j8z*a(!dceag-6_gy&noma@981xls+fm*&p6w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SITE_ID = 1
+
 ALLOWED_HOSTS = ["*"]
 
 
@@ -46,6 +48,12 @@ INSTALLED_APPS = [
     'debug_toolbar',
     
     'tracks',
+    'users',
+    
+    
+    
+    'allauth',
+    'allauth.account',
 ]
 
 INTERNAL_IPS = [
@@ -64,6 +72,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'music_app.urls'
@@ -172,6 +181,32 @@ CACHES = {
         "OPTIONS": {
             "db": "1",
         },
+    }
+}
+
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # Стандартная аутентификация
+    'allauth.account.auth_backends.AuthenticationBackend',  # allauth
+)
+
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_QUERY_EMAIL = True
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
     }
 }
 

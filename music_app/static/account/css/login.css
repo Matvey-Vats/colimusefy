@@ -1,0 +1,47 @@
+h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+form p {
+    margin-bottom: 1rem;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #181818;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+p {
+    text-align: center;
+}
+
+a {
+    color: #181818;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
