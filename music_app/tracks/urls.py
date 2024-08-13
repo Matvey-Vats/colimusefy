@@ -10,4 +10,6 @@ urlpatterns = [
     path('artists/', views.artist_list, name="artist-list"),
     path('album/<slug:album_id>/', views.album_detail, name="album-detail"),
     path('artist/<slug:artist_id>/', views.artist_detail, name="artist-detail"),
+
+    path('search/', views.search, name="search"),
 ]

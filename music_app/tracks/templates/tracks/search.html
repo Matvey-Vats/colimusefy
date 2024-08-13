@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static "tracks/css/search.css" %}">
+{% endblock css %}
+
+{% block content %}
+<section class="search-section">
+    <div class="container">
+        <form method="get" class="search-box">
+            <input name="query" type="text" placeholder="Поиск..." class="search-input">
+            <button type="submit">Search</button>
+        </form>
+        <div class="results-section">
+            <div class="results-category">
+                <h2>Альбомы</h2>
+                <div class="results-list">
+                    {% for album in results.albums %}
+                    <div class="result-card">
+                        <img src="{{ album.images.0.url }}" alt="Album 1" class="result-image">
+                        <a href="{% url "album-detail" album_id=album.id %}"><h3 class="result-title">{{ album.name }}</h3></a>
+                    </div>
+                    {% endfor %}
+                    <a href="{% url "album-list" %}" class="view-more">Посмотреть все альбомы</a>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="results-category">
+                <h2>Песни</h2>
+                <div class="results-list">
+                    {% for track in results.tracks %}
+                    <div class="result-card">
+                        <img src="{{ track.album.images.0.url }}" alt="Song 1" class="result-image">
+                        <a href="{% url "album-detail" album_id=track.album.id %}"><h3 class="result-title">{{ track.name }}</h3></a>
+                    </div>
+                    {% endfor %}
+                    
+                    <a href="{% url "track-list" %}" class="view-more">Посмотреть все песни</a>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="results-category">
+                <h2>Исполнители</h2>
+                <div class="results-list">
+                    {% for artist in results.artists %}
+                    <div class="result-card">
+                        <img src="{{ artist.images.0.url }}" alt="Artist 1" class="result-image">
+                        <a href="{% url "artist-detail" artist_id=artist.id %}"><h3 class="result-title">{{ artist.name }}</h3></a>
+                    </div>
+                    {% endfor %}
+                    <a href="{% url "artist-list" %}" class="view-more">Посмотреть всех исполнителей</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

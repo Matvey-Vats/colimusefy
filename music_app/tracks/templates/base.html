@@ -20,9 +20,9 @@
                     <li><a href="{% url "track-list" %}">Tracks</a></li>
                     <li><a href="{% url "album-list" %}">Albums</a></li>
                     <li><a href="{% url "artist-list" %}">Artists</a></li>
-                    <li><a href="#">Search</a></li>
+                    <li><a href="{% url "search" %}">Search</a></li>
                     {% if request.user.is_authenticated %}
-                        <li><a href="#">Profile</a></li>
+                        {% comment %} <li><a href="#">Profile</a></li> {% endcomment %}
                     {% endif %}
                 </nav>
                 {% if request.user.is_authenticated %}
@@ -50,16 +50,16 @@
                 </div>
                 <div class="footer-section links">
                     <ul>
-                        <li><a href="#">Главная</a></li>
-                        <li><a href="#">Треки</a></li>
-                        <li><a href="#">Альбомы</a></li>
-                        <li><a href="#">Исполнители</a></li>
-                        <li><a href="#">Поиск</a></li>
+                        <li><a href="\">Home</a></li>
+                        <li><a href="{% url "track-list" %}">Tracks</a></li>
+                        <li><a href="{% url "album-list" %}">Albums</a></li>
+                        <li><a href="{% url "artist-list" %}">Artists</a></li>
+                        <li><a href="{% url "search" %}">Search</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Ваша Компания. Все права защищены.</p>
+                <p>&copy; 2024 Your Company. All rights reserved.</p>
             </div>
         </div>
     </footer>

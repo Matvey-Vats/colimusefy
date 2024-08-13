@@ -5,9 +5,8 @@ from django.core.paginator import Paginator
 from django.views.decorators.cache import cache_page
 
 
-from .tasks import fetch_album_data
+from .tasks import get_album_data, get_popular_items
 from celery.result import AsyncResult
-from .utils import process_albums_in_batches, fetch_results
 import time
 
 
@@ -76,35 +75,6 @@ def track_list(request):
                                                   'current_page': page_obj.number,})
 
 
-# def album_list(request):
-#     sp = get_spotify_client()
-    
-#     result = sp.search(q=f"year:{settings.CURRENT_YEAR}", type="album", limit=1)
-#     albums_ids = [album['id'] for album in result['albums']['items']]
-    
-    # task_ids = [fetch_album_data.delay(album_id).id for album_id in albums_ids]
-    
-    # album = sp.album(album_id)
-    
-    # total_duration_ms = sum([track['duration_ms'] for track in album['tracks']['items']])
-    # total_duration_min = total_duration_ms // 60000
-    # total_duration_sec = (total_duration_ms % 60000) // 1000
-    
-    
-    
-    # albums_data = []
-    # for task_id in task_ids:
-    #     result = AsyncResult(task_id)
-    #     try:
-    #         # Использование get с таймаутом
-    #         data = result.get(timeout=10)  # Укажите таймаут, если задачи могут занимать время
-    #         albums_data.append(data)
-    #     except Exception as e:
-    #         # Обработка исключений, если задача завершилась с ошибкой
-    #         print(f"Error retrieving result for task {task_id}: {e}")
-        
-    # return render(request, "tracks/albums.html", {"albums": albums_data})
-
 # @cache_page(60 * 15)
 def album_list(request):
     sp = get_spotify_client()
@@ -141,19 +111,6 @@ def album_list(request):
                                                   'current_page': page_obj.number,})
 
 
-# def album_list(request):
-#     sp = get_spotify_client()
-    
-#     batch_size = 10  # Количество альбомов в одном пакете
-#     all_albums_data = []
-    
-#     for task_ids in process_albums_in_batches(sp, settings.CURRENT_YEAR, batch_size):
-#         albums_data = fetch_results(task_ids)
-#         all_albums_data.extend(albums_data)
-    
-#     return render(request, "tracks/albums.html", {"albums": all_albums_data})
-
-
 # @cache_page(60 * 15)
 def artist_list(request):
     sp = get_spotify_client()
@@ -178,11 +135,10 @@ def artist_list(request):
                                                    'paginator': paginator,
                                                    'current_page': page_obj.number,})
     
-  
+
 def album_detail(request, album_id):
-    sp = get_spotify_client()
-    
-    result = sp.album(album_id=album_id)
+
+    result = get_album_data(album_id)
     
     tracks = result['tracks']['items']
     
@@ -222,3 +178,44 @@ def artist_detail(request, artist_id):
                                                          'albums': page_obj,
                                                          'paginator': paginator,
                                                          'current_page': page_obj.number,})
+
+# def search(request):
+#     sp = get_spotify_client()
+#     query = request.GET.get('query')
+    
+#     def perform_search(search_query):
+#         tracks = sp.search(q=search_query, type='track', limit=5)['tracks']['items']
+#         albums = sp.search(q=search_query, type='album', limit=5)['albums']['items']
+#         artists = sp.search(q=search_query, type='artist', limit=5)['artists']['items']
+        
+#         return {
+#             'tracks': tracks,
+#             'albums': albums,
+#             'artists': artists,
+#         }
+    
+#     if not query:
+#         results = perform_search(f'year:{settings.CURRENT_YEAR}')
+#     else:
+#         results = perform_search(query)
+    
+#     return render(request, "tracks/search.html", {'results': results})
+
+    
+
+def search(request):
+    query = request.GET.get('query')
+    
+    if not query:
+        # Если запрос пуст, загружаем популярные треки, альбомы и исполнителей.
+        results = get_popular_items()
+    else:
+        # Иначе выполняем поиск по запросу.
+        sp = get_spotify_client()
+        results = {
+            'tracks': sp.search(q=query, type='track', limit=5)['tracks']['items'],
+            'albums': sp.search(q=query, type='album', limit=5)['albums']['items'],
+            'artists': sp.search(q=query, type='artist', limit=5)['artists']['items'],
+        }
+    
+    return render(request, "tracks/search.html", {'results': results})

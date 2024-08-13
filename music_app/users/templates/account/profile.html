@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block css %}<link rel="stylesheet" href="{% static "account/css/profile.css" %}">{% endblock css %}
+
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-info">
+            <h1>{{ user.username }}</h1>
+            <p>{{ user.email }}</p>
+        </div>
+    </div>
+
+    <div class="playlists-container">
+        <h2>Your Playlists</h2>
+        {% for playlist in playlists %}
+        <div class="playlist-card">
+            <img src="{{ playlist.image.url }}" alt="Playlist Image">
+            <div class="playlist-info">
+                <h3>{{ playlist.name }}</h3>
+                <p>{{ playlist.track_count }} tracks</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
