@@ -18,7 +18,7 @@ def get_artist_info(sp, artist_id):
         'image': artist['images'][0]['url'] if artist.get('images') else ''
     }
 
-# @cache_page(60 * 15)
+@cache_page(60)
 def home(request):
     sp = get_spotify_client()
     
@@ -47,7 +47,7 @@ def home(request):
     
     return render(request, 'tracks/index.html', {'artists': sorted_artists, 'albums': popular_albums})    
 
-# @cache_page(60 * 15)
+@cache_page(60)
 def track_list(request):
     sp = get_spotify_client()
     
@@ -75,7 +75,7 @@ def track_list(request):
                                                   'current_page': page_obj.number,})
 
 
-# @cache_page(60 * 15)
+@cache_page(60)
 def album_list(request):
     sp = get_spotify_client()
     start_time = time.time()
@@ -111,7 +111,7 @@ def album_list(request):
                                                   'current_page': page_obj.number,})
 
 
-# @cache_page(60 * 15)
+@cache_page(60)
 def artist_list(request):
     sp = get_spotify_client()
     
@@ -137,8 +137,9 @@ def artist_list(request):
     
 
 def album_detail(request, album_id):
+    sp = get_spotify_client()
 
-    result = get_album_data(album_id)
+    result = sp.album(album_id)
     
     tracks = result['tracks']['items']
     
@@ -179,43 +180,44 @@ def artist_detail(request, artist_id):
                                                          'paginator': paginator,
                                                          'current_page': page_obj.number,})
 
-# def search(request):
-#     sp = get_spotify_client()
-#     query = request.GET.get('query')
-    
-#     def perform_search(search_query):
-#         tracks = sp.search(q=search_query, type='track', limit=5)['tracks']['items']
-#         albums = sp.search(q=search_query, type='album', limit=5)['albums']['items']
-#         artists = sp.search(q=search_query, type='artist', limit=5)['artists']['items']
-        
-#         return {
-#             'tracks': tracks,
-#             'albums': albums,
-#             'artists': artists,
-#         }
-    
-#     if not query:
-#         results = perform_search(f'year:{settings.CURRENT_YEAR}')
-#     else:
-#         results = perform_search(query)
-    
-#     return render(request, "tracks/search.html", {'results': results})
-
-    
-
+@cache_page(60)
 def search(request):
+    sp = get_spotify_client()
     query = request.GET.get('query')
     
-    if not query:
-        # Если запрос пуст, загружаем популярные треки, альбомы и исполнителей.
-        results = get_popular_items()
-    else:
-        # Иначе выполняем поиск по запросу.
-        sp = get_spotify_client()
-        results = {
-            'tracks': sp.search(q=query, type='track', limit=5)['tracks']['items'],
-            'albums': sp.search(q=query, type='album', limit=5)['albums']['items'],
-            'artists': sp.search(q=query, type='artist', limit=5)['artists']['items'],
+    def perform_search(search_query):
+        tracks = sp.search(q=search_query, type='track', limit=5)['tracks']['items']
+        albums = sp.search(q=search_query, type='album', limit=5)['albums']['items']
+        artists = sp.search(q=search_query, type='artist', limit=5)['artists']['items']
+        
+        return {
+            'tracks': tracks,
+            'albums': albums,
+            'artists': artists,
         }
     
+    if not query:
+        results = perform_search(f'year:{settings.CURRENT_YEAR}')
+    else:
+        results = perform_search(query)
+    
     return render(request, "tracks/search.html", {'results': results})
+
+    
+
+# def search(request):
+#     query = request.GET.get('query')
+    
+#     if not query:
+#         # Если запрос пуст, загружаем популярные треки, альбомы и исполнителей.
+#         results = get_popular_items()
+#     else:
+#         # Иначе выполняем поиск по запросу.
+#         sp = get_spotify_client()
+#         results = {
+#             'tracks': sp.search(q=query, type='track', limit=5)['tracks']['items'],
+#             'albums': sp.search(q=query, type='album', limit=5)['albums']['items'],
+#             'artists': sp.search(q=query, type='artist', limit=5)['artists']['items'],
+#         }
+    
+#     return render(request, "tracks/search.html", {'results': results})

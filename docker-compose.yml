@@ -36,7 +36,7 @@ services:
     build: 
       context: .
     hostname: worker
-    entrypoint: sh -c "celery -A music_app.celery worker --loglevel=info"
+    entrypoint: sh -c "celery -A music-app.celery worker --loglevel=info"
     volumes:
       - ./music_app:/music_app
     depends_on:
@@ -50,27 +50,7 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
 
-
-  # worker2:
-  #   build: 
-  #     context: .
-  #   hostname: worker2
-  #   entrypoint: celery
-  #   command: -A celery_app.app worker --loglevel=info
-  #   volumes:
-  #     - ./service:/service
-  #   links:
-  #     - redis
-  #   depends_on:
-  #     - redis
-  #     - database
-      
-  #   environment:
-  #     - DB_HOST=database
-  #     - DB_NAME=dbname
-  #     - DB_USER=dbuser
-  #     - DB_PASS=admin
-    
+   
 
 
   flower:
